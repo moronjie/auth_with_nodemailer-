@@ -6,10 +6,10 @@ export const sendEmail = async (email: string, subject: string, text: string) =>
     const transporter = nodemailer.createTransport({
         host: "smtp.gmail.com",
         port: 587,
-        secure: false, // true for 465, false for other ports
+        secure: false, 
         auth: {
-            user: process.env.MAIL_USER, // generated ethereal user
-            pass: process.env.MAIL_PASS, // generated ethereal password
+            user: process.env.MAIL_USER, 
+            pass: process.env.MAIL_PASS, 
         },
     });
 
