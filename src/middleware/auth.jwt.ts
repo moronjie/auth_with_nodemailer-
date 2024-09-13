@@ -6,7 +6,7 @@ import { AuthReq } from "../types"
 
 
 export const authUser = async (req: AuthReq, res: Response, next: NextFunction) => {
-    if(!req.headers.authorization) return next(customError("you are not authorized", 401))
+    // if(!req.headers.authorization) return next(customError("you are not authorized", 401))
 
     // const token = req.headers.authorization?.replace("Bearer ", "")
     const token = req.cookies.token

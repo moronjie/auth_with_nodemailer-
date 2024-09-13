@@ -1,7 +1,8 @@
-import Joi, { required } from "joi";
+import Joi from "joi";
 import mongoose, { Document, CallbackWithoutResultAndOptionalError } from 'mongoose';
 import bcrypt from "bcrypt"
 import { customError } from "../middleware/errorHandler";
+// import * from "crypto" as crypto
 
 export interface userInterface extends Document {
     _id: mongoose.Types.ObjectId,
@@ -12,10 +13,11 @@ export interface userInterface extends Document {
     role: string,
     active: boolean,
     resetPasswordToken: string,
-    resetPasswordExpire: Date,
+    resetPasswordExpire: number,
     createdAt: Date,
-    updatedAt: Date
-    comparePassword(password: string): Promise<boolean | undefined>;
+    updatedAt: Date,
+    comparePassword(password: string): Promise<boolean | undefined>,
+
 }
 
 const userSchema = new mongoose.Schema<userInterface>({
@@ -46,7 +48,9 @@ const userSchema = new mongoose.Schema<userInterface>({
     },
     active: {type: Boolean, default: false},
     resetPasswordToken: String,
-    resetPasswordExpire: Date,
+    resetPasswordExpire: Number,
+    // setToken: String,
+    // setExpirationTime: Number,
 }, {timestamps: true})
 
 userSchema.pre("save", async function (this: userInterface, next: CallbackWithoutResultAndOptionalError): Promise<void> {
