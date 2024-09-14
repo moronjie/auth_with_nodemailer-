@@ -21,6 +21,39 @@ export const createTask = async (req: Request, res: Response, next: NextFunction
 }
 
 // get single task 
+export const getTask = async (req: Request, res: Response, next: NextFunction) => {
+    try {
+        const task = await Task.findById(req.params.id).populate("atriute")
+        if (!task) return next(customError('Task not found', 404));
+
+        res.status(200).json({
+            success: true,
+            data: task
+        })
+
+    } catch (err) {
+        const error = err as Error;
+        next(customError(error.message, 500));
+    }
+}
+
+// get all tasks
+export const getAllTask = async (req: Request, res: Response, next: NextFunction) => {
+    try {
+        const tasks = await Task.find()
+
+        // add pagination
+
+        res.status(200).json({
+            success: true,
+            data: tasks
+        })
+
+    } catch (err) {
+        const error = err as Error;
+        next(customError(error.message, 500));
+    }
+}
 
 // get my task 
 
