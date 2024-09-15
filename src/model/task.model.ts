@@ -16,7 +16,7 @@ const taskSchema = new mongoose.Schema({
         default: "Normal",
         enum: ['High', "Normal", 'Medium', 'Low']
     }, 
-    atriute: {
+    attribute: {
         type: mongoose.Schema.Types.ObjectId,
         ref: 'User'
     }

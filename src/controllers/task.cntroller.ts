@@ -1,6 +1,7 @@
 import { Response, Request, NextFunction } from 'express';
 import { Task, verifyTaskSchema } from '../model/task.model';
 import { customError } from '../middleware/errorHandler';
+import { AuthReq } from '../types';
 
 // create a new task 
 export const createTask = async (req: Request, res: Response, next: NextFunction) => {
@@ -9,27 +10,27 @@ export const createTask = async (req: Request, res: Response, next: NextFunction
     if (error) return next(customError(error.message, 400));
 
     // create a new task
-    const task = new Task(req.body)
+    const task = new Task(req.body);
 
-    await task.save()
+    await task.save();
 
     res.status(201).json({
         success: true,
         message: 'Task created successfully',
         data: task
-    })
+    });
 }
 
 // get single task 
 export const getTask = async (req: Request, res: Response, next: NextFunction) => {
     try {
-        const task = await Task.findById(req.params.id).populate("atriute")
+        const task = await Task.findById(req.params.id).populate("attribute");
         if (!task) return next(customError('Task not found', 404));
 
         res.status(200).json({
             success: true,
             data: task
-        })
+        });
 
     } catch (err) {
         const error = err as Error;
@@ -40,14 +41,14 @@ export const getTask = async (req: Request, res: Response, next: NextFunction) =
 // get all tasks
 export const getAllTask = async (req: Request, res: Response, next: NextFunction) => {
     try {
-        const tasks = await Task.find()
+        const tasks = await Task.find();
 
         // add pagination
 
         res.status(200).json({
             success: true,
             data: tasks
-        })
+        });
 
     } catch (err) {
         const error = err as Error;
@@ -56,6 +57,17 @@ export const getAllTask = async (req: Request, res: Response, next: NextFunction
 }
 
 // get my task 
+export const getMyTask = async (req: AuthReq, res: Response, next: NextFunction) => {
+    try {
+        const task = await Task.findOne({"attribute": req.user?._id}).populate("attribute");
+        if (!task) return next(customError('Task not found', 404));
+
+        res.status(200).json({success: true, data: task});
+    } catch (err) {
+        const error = err as Error;
+        next(customError(error.message, 500));
+    }
+}
 
 // update my task
 
