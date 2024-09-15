@@ -71,4 +71,37 @@ export const getMyTask = async (req: AuthReq, res: Response, next: NextFunction)
 
 // update my task
 
+export const updateMyTask = async (req: AuthReq, res: Response, next: NextFunction) => {
+    try {
+        let task = await Task.findById(req.params.id);
+        if (!task) return next(customError('Task not found', 404));
+
+        if(req.user?._id.toString() !== task.attribute?.toString) return next(customError("you are not authorized to update this task", 401))
+
+        task = await Task.findByIdAndUpdate(req.params.id, req.body, {new: true}).populate("attribute");
+        if (!task) return next(customError('Task not found', 404));
+
+        res.status(200).json({success: true, message: "task updated successfully", data: task});
+    } catch (err) {
+        const error = err as Error;
+        next(customError(error.message, 500));
+    }
+}
+
 // delete my task
+export const deleteTask = async (req: AuthReq, res: Response, next: NextFunction) => {
+    try {
+        let task = await Task.findById(req.params.id);
+        if (!task) return next(customError('Task not found', 404));
+
+        if(req.user?._id.toString() !== task.attribute?.toString) return next(customError("you are not authorized to delete this task", 401))
+
+        await Task.findByIdAndDelete(req.params.id);
+
+        res.status(200).json({success: true, message: "task deleted successfully"});
+        
+    } catch (err) {
+        const error = err as Error;
+        next(customError(error.message, 500));
+    }
+}

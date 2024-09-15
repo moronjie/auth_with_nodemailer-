@@ -1,5 +1,5 @@
 import { Router } from "express";
-import { createTask, getAllTask, getMyTask, getTask } from "../controllers/task.cntroller";
+import { createTask, deleteTask, getAllTask, getMyTask, getTask, updateMyTask } from "../controllers/task.cntroller";
 import { authUser } from "../middleware/auth.jwt";
 
 const router = Router();
@@ -17,8 +17,10 @@ router.get('/mytask', authUser, getMyTask)
 router.get('/', authUser, getAllTask)
 
 // update my task 
+router.put('/mytask', authUser, updateMyTask)
 
 // delete my task 
+router.delete('/mytask', authUser, deleteTask)
 
 
 export default router
