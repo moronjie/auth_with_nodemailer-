@@ -124,7 +124,7 @@ export const forgotPassword = async (req: Request, res: Response, next: NextFunc
 
 export const resetPassword = async (req: Request, res: Response, next: NextFunction) => {
     try {
-        const {id, token} = req.body;
+        const {id, token} = req.params;
         const user = await User.findById(id)
         if (!user) return next(customError("user does not exist", 404));
 
